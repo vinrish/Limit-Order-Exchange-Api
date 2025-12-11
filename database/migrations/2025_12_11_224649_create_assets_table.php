@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('assets', function (Blueprint $table): void {
             $table->uuid('id')->primary();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignUuid('user_id')->constrained('users');
             $table->string('symbol');
             $table->decimal('amount', 30, 18);
             $table->decimal('locked_amount', 30, 18);
