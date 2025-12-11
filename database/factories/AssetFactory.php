@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,7 +20,10 @@ final class AssetFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'user_id' => User::factory(),
+            'symbol' => $this->faker->currencyCode(),
+            'amount' => number_format($this->faker->randomFloat(8, 0, 1000000), 8, '.', ''),
+            'locked_amount' => number_format($this->faker->randomFloat(8, 0, 1000000), 8, '.', ''),
         ];
     }
 }
