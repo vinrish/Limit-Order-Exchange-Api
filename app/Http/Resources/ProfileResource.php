@@ -17,6 +17,9 @@ final class ProfileResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'id' => (string) $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
             'balance' => (string) $this->balance,
             'assets' => $this->assets->map(fn ($asset): array => [
                 'symbol' => $asset->symbol,

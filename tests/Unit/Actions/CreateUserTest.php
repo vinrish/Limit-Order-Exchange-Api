@@ -23,7 +23,7 @@ it('creates a user successfully', function (): void {
     expect($user)->toBeInstanceOf(User::class)
         ->and($user->name)->toBe('John Doe')
         ->and($user->email)->toBe('john@example.com')
-        ->and($user->balance)->toBe('0.00')
+        ->and($user->balance)->toBe('0.00000000')
         ->and(Hash::check('secret123', $user->password))->toBeTrue();
 
     Event::assertDispatched(Registered::class);

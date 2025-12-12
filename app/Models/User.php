@@ -54,7 +54,7 @@ final class User extends Authenticatable
             'id' => 'string',
             'name' => 'string',
             'email' => 'string',
-            'balance' => 'string',
+            'balance' => 'decimal:8',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'created_at' => 'datetime',
