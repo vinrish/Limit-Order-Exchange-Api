@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property-read string $id
- * @property-read string $uuid
+ * @property-read string $user_id
  * @property-read string $symbol
  * @property-read string $side
  * @property-read string $price
