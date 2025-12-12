@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 final class Asset extends Model
 {
     /** @use HasFactory<\Database\Factories\AssetFactory> */
-    use HasFactory, HasUUIDs;
+    use HasFactory, HasUuids;
 
     protected $table = 'assets';
 
@@ -34,8 +34,8 @@ final class Asset extends Model
             'id' => 'string',
             'user_id' => 'string',
             'symbol' => 'string',
-            'amount' => 'string',
-            'locked_amount' => 'string',
+            'amount' => 'decimal:8',
+            'locked_amount' => 'decimal:8',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];

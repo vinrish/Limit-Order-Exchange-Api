@@ -4,29 +4,21 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\v1;
 
+use App\Actions\User\AuthenticateUser;
 use App\Http\Requests\LoginUserRequest;
 use App\Http\Resources\UserResource;
-use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 final class LoginController
 {
     /**
      * Store a newly created resource in storage.
      */
-    public function store(LoginUserRequest $request)
+    public function store(LoginUserRequest $request, AuthenticateUser $action)
     {
-        $email = mb_strtolower((string) $request->input('email'));
-        $password = $request->input('password');
-
-        $user = User::where('email', $email)->first();
-
-        if (! $user || ! Hash::check($password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Invalid credentials provided.'],
-            ]);
-        }
+        $user = $action->handle(
+            $request->string('email')->lower()->value(),
+            $request->string('password')->value(),
+        );
 
         $user->tokens()->delete();
 
