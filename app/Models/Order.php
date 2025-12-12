@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Enums\OrderSide;
+use App\Enums\OrderStatus;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -34,10 +36,12 @@ final class Order extends Model
         return [
             'id' => 'string',
             'user_id' => 'string',
-            'side' => 'string',
+            'side' => OrderSide::class,
             'price' => 'decimal:8',
             'amount' => 'decimal:18',
-            'status' => 'integer',
+            'status' => OrderStatus::class,
+            'created_at' => 'datetime',
+            'updated_at' => 'datetime',
         ];
     }
 }
