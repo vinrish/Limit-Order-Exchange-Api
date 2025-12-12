@@ -22,7 +22,7 @@ export default defineConfig({
             dirs: [
                 "./src/composables/",
                 "./src/plugins/*/composables/*",
-                "./src/utils/"
+                "./src/utils/",
             ],
             vueTemplate: true,
 

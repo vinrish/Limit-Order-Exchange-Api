@@ -1,11 +1,25 @@
 <script setup lang="ts">
-
 const email = ref("");
 const password = ref("");
-const remember = ref();
+const remember = ref(false);
 const error = ref("");
 
 const handleLogin = async () => {
+    const res = await $api("login", {
+        method: "POST",
+        body: {
+            email: email.value,
+            password: password.value,
+            remember: remember.value,
+        },
+        onResponseError({ response }) {
+            error.value = response._data.errors;
+        },
+    });
+
+    const { message, access_token, user } = res;
+
+    console.log(message, access_token, user);
 };
 </script>
 

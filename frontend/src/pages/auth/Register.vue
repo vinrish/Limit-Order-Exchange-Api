@@ -5,7 +5,24 @@ const password = ref("");
 const passwordConfirmation = ref();
 const error = ref("");
 
-const handleRegister = async () => {};
+const handleRegister = async () => {
+    const res = await $api("register", {
+        method: "POST",
+        body: {
+            name: name.value,
+            email: email.value,
+            password: password.value,
+            password_confirmation: passwordConfirmation.value,
+        },
+        onResponseError({ response }) {
+            error.value = response._data.errors;
+        },
+    });
+
+    const { message, access_token, user } = res;
+
+    console.log(message, access_token, user);
+};
 </script>
 
 <template>
