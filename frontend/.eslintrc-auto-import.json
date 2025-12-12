@@ -1,5 +1,7 @@
 {
   "globals": {
+    "$api": "readonly",
+    "COOKIE_MAX_AGE_1_YEAR": "readonly",
     "Component": "readonly",
     "ComponentPublicInstance": "readonly",
     "ComputedRef": "readonly",

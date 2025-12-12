@@ -19,7 +19,11 @@ export default defineConfig({
         AutoImport({
             // Auto import composables
             imports: ["vue", VueRouterAutoImports, "@vueuse/core", "pinia"],
-            dirs: ["./src/composables/", "./src/plugins/*/composables/*"],
+            dirs: [
+                "./src/composables/",
+                "./src/plugins/*/composables/*",
+                "./src/utils/"
+            ],
             vueTemplate: true,
 
             ignore: ["useCookies", "useStorage"],
