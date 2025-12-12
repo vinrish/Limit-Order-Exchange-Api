@@ -8,6 +8,7 @@ use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read string $id
@@ -33,10 +34,15 @@ final class Asset extends Model
             'id' => 'string',
             'user_id' => 'string',
             'symbol' => 'string',
-            'amount' => 'decimal:18',
-            'location' => 'decimal:18',
+            'amount' => 'string',
+            'locked_amount' => 'string',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

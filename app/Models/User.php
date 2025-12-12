@@ -8,6 +8,7 @@ namespace App\Models;
 use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -53,11 +54,26 @@ final class User extends Authenticatable
             'id' => 'string',
             'name' => 'string',
             'email' => 'string',
-            'balance' => 'decimal:8',
+            'balance' => 'string',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    public function assets(): HasMany
+    {
+        return $this->hasMany(Asset::class);
+    }
+
+    public function asset($symbol)
+    {
+        return $this->hasOne(Asset::class)->where('symbol', $symbol);
+    }
+
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class);
     }
 }

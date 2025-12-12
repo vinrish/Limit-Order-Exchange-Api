@@ -10,6 +10,7 @@ use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property-read string $id
@@ -37,11 +38,16 @@ final class Order extends Model
             'id' => 'string',
             'user_id' => 'string',
             'side' => OrderSide::class,
-            'price' => 'decimal:8',
-            'amount' => 'decimal:18',
+            'price' => 'string',
+            'amount' => 'string',
             'status' => OrderStatus::class,
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
+    }
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }
