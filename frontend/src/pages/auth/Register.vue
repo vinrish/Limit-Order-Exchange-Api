@@ -1,9 +1,15 @@
 <script setup lang="ts">
+import { useAuthStore } from "@/stores/useAuthStore.ts";
+
 const name = ref("");
 const email = ref("");
 const password = ref("");
 const passwordConfirmation = ref();
 const error = ref("");
+
+const route = useRoute();
+const router = useRouter();
+const auth = useAuthStore();
 
 const handleRegister = async () => {
     const res = await $api("register", {
@@ -21,7 +27,12 @@ const handleRegister = async () => {
 
     const { message, access_token, user } = res;
 
-    console.log(message, access_token, user);
+    auth.setAuth(access_token, user);
+
+    const redirect = route.query.redirect as string | undefined;
+    await router.replace(redirect || { name: "Profile" });
+
+    // console.log(message, access_token, user);
 };
 </script>
 
