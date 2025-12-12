@@ -1,16 +1,40 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.dom.json",
-  "compilerOptions": {
-    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
-    "types": ["vite/client"],
+    "extends": "@vue/tsconfig/tsconfig.dom.json",
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "moduleResolution": "Node",
+        "lib": ["ESNext", "DOM"],
+        "jsx": "preserve",
+        "strict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noFallthroughCasesInSwitch": true,
+        "useDefineForClassFields": true,
+        "skipLibCheck": true,
+        "resolveJsonModule": true,
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "isolatedModules": true,
+        "noEmit": true,
+        "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+        "types": ["vite/client"],
 
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
-  },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.vue"]
+        /* Optional: enable incremental builds */
+        "incremental": true,
+
+        /* Base path aliases */
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["src/*"]
+        }
+    },
+    "include": [
+        "src/**/*.ts",
+        "src/**/*.tsx",
+        "src/**/*.vue",
+        "auto-imports.d.ts",
+        "env.d.ts",
+        "types/**/*.d.ts"
+    ]
 }
