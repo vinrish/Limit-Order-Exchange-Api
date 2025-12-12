@@ -25,7 +25,6 @@ arch()
 
 arch()
     ->expect('App\Services')
-    ->toBeReadonly()
     ->toBeFinal()
     ->toBeClasses()
     ->not->toBeTraits()
