@@ -44,45 +44,66 @@ async function loadData() {
         orderStore.setOrderBook(bids, asks);
     }
 }
+
+const cancelling = ref<string | null>(null);
+
+const cancelOrder = async (orderId: string) => {
+    if (cancelling.value) return;
+
+    cancelling.value = orderId;
+    try {
+        await useApi(createUrl(`orders/${orderId}/cancel`), { method: 'POST' });
+
+        orderStore.updateOrderStatus(orderId, 3);
+        await profileStore.loadProfile();
+        await loadData();
+    } catch (err) {
+        console.error('Cancel failed', err);
+    } finally {
+        cancelling.value = null;
+    }
+};
 </script>
 
 <template>
     <Default>
-        <div class="grid grid-cols-3 gap-6">
+        <div class="grid grid-cols-2 gap-6">
             <!-- Wallet -->
             <div class="bg-[#1e1e22] p-4 rounded">
-                <h3 class="font-semibold mb-2">Wallet</h3>
-                <p>
+                <h3 class="font-semibold mb-2 text-2xl">Wallet</h3>
+                <p class="text-lg font-sans text-white mb-2">
                     USD:
                     <b>{{ profileStore.balances.usd.toFixed(2) }}</b>
                 </p>
-                <div v-for="(v, k) in profileStore.balances.assets" :key="k">
+                <div v-for="(v, k) in profileStore.balances.assets" :key="k" class="text-lg font-sans text-white mb-2">
                     {{ k }}: {{ v }}
                 </div>
             </div>
 
             <!-- Orderbook -->
             <div class="bg-[#1e1e22] p-4 rounded">
-                <h3 class="font-semibold mb-2">OrderBook ({{ symbol }})</h3>
+                <h3 class="font-semibold text-2xl mb-2">OrderBook ({{ symbol }})</h3>
 
-                <div class="grid grid-cols-2 gap-4 text-sm">
+                <div class="grid grid-cols-2 gap-6 text-sm">
                     <div>
-                        <p class="text-red-400">Asks</p>
+                        <p class="text-red-400 text-xl">Asks</p>
                         <div
                             v-for="a in orderStore.orderBook.asks"
                             :key="a.price"
+                            class="text-lg font-sans"
                         >
-                            {{ a.price }} — {{ a.amount }}
+                            {{ a.price }} - {{ a.amount }}
                         </div>
                     </div>
 
                     <div>
-                        <p class="text-green-400">Bids</p>
+                        <p class="text-green-400 text-xl">Bids</p>
                         <div
                             v-for="b in orderStore.orderBook.bids"
                             :key="b.price"
+                            class="text-lg font-sans"
                         >
-                            {{ b.price }} — {{ b.amount }}
+                            {{ b.price }} - {{ b.amount }}
                         </div>
                     </div>
                 </div>
@@ -90,31 +111,32 @@ async function loadData() {
 
             <!-- Orders -->
             <div class="bg-[#1e1e22] p-4 rounded">
-                <h3 class="font-semibold mb-2">My Orders</h3>
+                <h3 class="font-semibold mb-2 text-xl">My Orders</h3>
 
-                <table class="w-full text-sm">
+                <table class="w-full text-lg">
                     <thead>
                         <tr>
-                            <th>Side</th>
-                            <th>Price</th>
-                            <th>Amount</th>
-                            <th>Status</th>
+                            <td class="font-bold font-sans">Side</td>
+                            <td class="font-bold font-sans">Price</td>
+                            <td class="font-bold font-sans">Amount</td>
+                            <td class="font-bold font-sans">Status</td>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="o in orderStore.orders" :key="o.id">
                             <td
+                                class="text-lg font-bold"
                                 :class="
                                     o.side === 'buy'
                                         ? 'text-green-400'
-                                        : 'text-red-400'
+                                        : 'text-red-500'
                                 "
                             >
                                 {{ o.side }}
                             </td>
                             <td>{{ o.price }}</td>
                             <td>{{ o.amount }}</td>
-                            <td>
+                            <td class="mb-2">
                                 {{
                                     o.status === 1
                                         ? "Open"
@@ -122,6 +144,16 @@ async function loadData() {
                                           ? "Filled"
                                           : "Cancelled"
                                 }}
+                            </td>
+                            <td>
+                                <button
+                                    v-if="o.status === 1"
+                                    @click="cancelOrder(o.id)"
+                                    :disabled="cancelling === o.id"
+                                    class="px-3 py-1 bg-red-600 hover:bg-red-700 disabled:opacity-40 rounded text-white text-sm"
+                                >
+                                    Cancel
+                                </button>
                             </td>
                         </tr>
                     </tbody>

@@ -2,7 +2,7 @@ export type OrderSide = "buy" | "sell";
 export type OrderStatus = 1 | 2 | 3;
 
 export interface Order {
-    id: number;
+    id: string;
     symbol: string;
     side: OrderSide;
     price: number;
@@ -40,11 +40,19 @@ export const useOrderStore = defineStore("orders", () => {
         if (order) order.status = 2;
     }
 
+    function updateOrderStatus(id: string, status: OrderStatus) {
+        const order = orders.value.find(o => o.id === id);
+        if (order) {
+            order.status = status;
+        }
+    }
+
     return {
         orders,
         orderBook,
         setOrders,
         setOrderBook,
         onOrderMatched,
+        updateOrderStatus,
     };
 });
