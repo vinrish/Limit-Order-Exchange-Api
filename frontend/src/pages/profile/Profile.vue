@@ -1,10 +1,4 @@
-<script setup lang="ts">
-// const { data: profileData } = await useApi(createUrl('profile'))
-//
-// const profile = computed(() => profileData.value)
-//
-// console.log(profile)
-</script>
+<script setup lang="ts"></script>
 
 <template>
     <Default>

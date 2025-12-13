@@ -2,6 +2,7 @@
 import { useAuthStore } from "@/stores/useAuthStore.ts";
 import { type ProfileData, useProfileStore } from "@/stores/useProfileStore.ts";
 import { useToastStore } from "@/stores/useToastStore.ts";
+import { useRealtimeStore } from "@/stores/useRealTimeStore.ts";
 
 defineProps<{ title?: string }>();
 
@@ -18,6 +19,13 @@ if (profileData.value) {
 }
 
 const profile = computed(() => profileStore.profileData);
+
+const realtime = useRealtimeStore();
+
+if (profileData.value) {
+    profileStore.setProfile(profileData.value);
+    realtime.subscribeUser(profileData.value.id);
+}
 
 const logout = async () => {
     await auth.logout();

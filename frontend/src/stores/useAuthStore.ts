@@ -1,3 +1,6 @@
+import { destroyEcho, initEcho } from "@/plugins/echo.ts";
+import { useRealtimeStore } from "@/stores/useRealTimeStore.ts";
+
 export const useAuthStore = defineStore("auth", () => {
     const token = useCookie<string | null>("access_token", {
         default: () => null,
@@ -12,6 +15,12 @@ export const useAuthStore = defineStore("auth", () => {
     function setAuth(accessToken: string, authUser?: any) {
         token.value = accessToken;
         user.value = authUser ?? null;
+
+        const realtime = useRealtimeStore();
+
+        initEcho(accessToken, () => {
+            realtime.resubscribe();
+        });
     }
 
     async function logout() {
@@ -22,6 +31,11 @@ export const useAuthStore = defineStore("auth", () => {
         } finally {
             token.value = null;
             user.value = null;
+
+            const realtime = useRealtimeStore();
+            realtime.unsubscribeUser();
+
+            destroyEcho();
         }
     }
 

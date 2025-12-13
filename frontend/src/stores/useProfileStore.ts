@@ -28,41 +28,65 @@ export const useProfileStore = defineStore("profile", () => {
         return { usd, assets: assetsMap };
     });
 
-    const setProfile = (data: ProfileData) => {
+    function setProfile(data: ProfileData) {
         profileData.value = data;
-    };
+    }
 
-    const updateBalances = (newBalances: {
+    function updateBalances(newBalances: {
         usd?: number;
         assets?: Record<string, number>;
-    }) => {
+    }) {
         if (!profileData.value) return;
 
         if (newBalances.usd !== undefined) {
             profileData.value.balance = newBalances.usd.toFixed(8);
         }
 
-        if (newBalances.assets !== undefined) {
-            const assetsArray = profileData.value.assets || [];
-            for (const symbol in newBalances.assets) {
-                const index = assetsArray.findIndex((a) => a.symbol === symbol);
-                // @ts-ignore
-                const amountStr = newBalances.assets[symbol].toFixed(8);
-                if (index >= 0) {
-                    // @ts-ignore
-                    assetsArray[index].amount = amountStr;
+        if (newBalances.assets) {
+            for (const [symbol, amount] of Object.entries(newBalances.assets)) {
+                const existing = profileData.value.assets.find(
+                    (a) => a.symbol === symbol,
+                );
+
+                const value = amount.toFixed(8);
+
+                if (existing) {
+                    existing.amount = value;
                 } else {
-                    assetsArray.push({ symbol, amount: amountStr });
+                    profileData.value.assets.push({
+                        symbol,
+                        amount: value,
+                    });
                 }
             }
-            profileData.value.assets = assetsArray;
         }
-    };
+    }
+
+    function applyTrade(event: {
+        base_symbol: string;
+        quote_symbol: string;
+        base_delta: string;
+        quote_delta: string;
+    }) {
+        if (!profileData.value) return;
+
+        const baseDelta = parseFloat(event.base_delta);
+        const quoteDelta = parseFloat(event.quote_delta);
+
+        updateBalances({
+            usd: balances.value.usd + quoteDelta,
+            assets: {
+                [event.base_symbol]:
+                    (balances.value.assets[event.base_symbol] || 0) + baseDelta,
+            },
+        });
+    }
 
     return {
         profileData,
         balances,
         setProfile,
         updateBalances,
+        applyTrade, // ✅ EXPOSE IT
     };
 });
