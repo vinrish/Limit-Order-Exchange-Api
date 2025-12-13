@@ -1,0 +1,76 @@
+export type OrderSide = "buy" | "sell";
+export type OrderStatus = 1 | 2 | 3;
+
+export interface Order {
+    id: string;
+    symbol: string;
+    side: OrderSide;
+    price: number;
+    amount: number;
+    status: OrderStatus;
+}
+
+export interface OrderBookSide {
+    price: number;
+    amount: number;
+}
+
+export const useOrderStore = defineStore("orders", () => {
+    // const orders = ref<Order[]>([]);
+    const openOrders = ref<Order[]>([]);
+    const allOrders = ref<Order[]>([]);
+
+    const orderBook = ref<{
+        bids: OrderBookSide[];
+        asks: OrderBookSide[];
+    }>({
+        bids: [],
+        asks: [],
+    });
+
+    // function setOrders(data: Order[]) {
+    //     orders.value = data;
+    // }
+
+    function setOrderBook(bids: OrderBookSide[], asks: OrderBookSide[]) {
+        orderBook.value.bids = bids;
+        orderBook.value.asks = asks;
+    }
+
+    function setOpenOrders(data: Order[]) {
+        openOrders.value = data;
+    }
+
+    function setAllOrders(data: Order[]) {
+        allOrders.value = data;
+    }
+
+    function onOrderMatched(payload: { order_id: string }) {
+        updateOrderStatus(payload.order_id, 2);
+
+        openOrders.value = openOrders.value.filter(
+            (o) => o.id !== payload.order_id,
+        );
+    }
+
+    function updateOrderStatus(id: string, status: OrderStatus) {
+        const lists = [openOrders.value, allOrders.value];
+
+        for (const list of lists) {
+            const order = list.find((o) => o.id === id);
+            if (order) order.status = status;
+        }
+    }
+
+    return {
+        // orders,
+        orderBook,
+        openOrders,
+        allOrders,
+        setOpenOrders,
+        setAllOrders,
+        setOrderBook,
+        onOrderMatched,
+        updateOrderStatus,
+    };
+});
