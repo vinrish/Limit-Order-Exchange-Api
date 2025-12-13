@@ -19,8 +19,12 @@ final class OrderController
      */
     public function index(Request $request)
     {
+        $user = $request->user();
         $symbol = $request->query('symbol');
-        $query = Order::query()->where('status', 1);
+        $query = Order::query()
+            ->where('status', 1)
+            ->where('user_id', $user->id);
+
         if ($symbol) {
             $query->where('symbol', mb_strtoupper($symbol));
         }
@@ -47,8 +51,8 @@ final class OrderController
 //        $price = $data['price'];
 //        $amount = $data['amount'];
 
-        $price = number_format((float)$data['price'], 8, '.', '');
-        $amount = number_format((float)$data['amount'], 8, '.', '');
+        $price = bcadd((string)$data['price'], '0', 8);
+        $amount = bcadd((string)$data['amount'], '0', 18);
 
         return DB::transaction(function () use ($user, $symbol, $side, $price, $amount) {
             if ($side === 'buy') {
@@ -63,12 +67,25 @@ final class OrderController
                 $freshUser->balance = bcsub((string) $freshUser->balance, $cost, 8);
                 $freshUser->save();
             } else {
-                $asset = Asset::where('user_id', $user->id)->where('symbol', $symbol)->lockForUpdate()->first();
-                if (! $asset || bccomp((string) $asset->amount, (string) $amount, 18) < 0) {
-                    return response()->json(['error' => 'insufficient asset balance'], 422);
+                $asset = Asset::where('user_id', $user->id)
+                    ->where('symbol', $symbol)
+                    ->lockForUpdate()
+                    ->first();
+                if (!$asset) {
+                    return response()->json(['error' => 'asset not found'], 422);
                 }
-                $asset->amount = bcsub((string) $asset->amount, (string) $amount, 18);
-                $asset->locked_amount = bcadd((string) $asset->locked_amount, (string) $amount, 18);
+
+                $availableAmount = bcadd((string)$asset->amount, '0', 18);
+
+                if (bccomp($availableAmount, $amount, 18) < 0) {
+                    return response()->json([
+                        'error' => 'insufficient asset balance',
+                        'available' => $availableAmount
+                    ], 422);
+                }
+
+                $asset->amount = bcsub($availableAmount, $amount, 18);
+                $asset->locked_amount = bcadd((string)$asset->locked_amount, $amount, 18);
                 $asset->save();
             }
 
