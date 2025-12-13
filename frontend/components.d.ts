@@ -11,15 +11,19 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    AllOrdersTable: typeof import('./src/components/AllOrdersTable.vue')['default']
     AuthLayout: typeof import('./src/layouts/AuthLayout.vue')['default']
     Button: typeof import('./src/components/Button.vue')['default']
     Card: typeof import('./src/components/Card.vue')['default']
     Default: typeof import('./src/layouts/Default.vue')['default']
     Fullscreen: typeof import('./src/layouts/fullscreen.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    OpenOrdersTable: typeof import('./src/components/OpenOrdersTable.vue')['default']
+    OrderBookCard: typeof import('./src/components/OrderBookCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Toast: typeof import('./src/components/Toast.vue')['default']
     UserProfile: typeof import('./src/components/UserProfile.vue')['default']
+    WalletCard: typeof import('./src/components/WalletCard.vue')['default']
   }
 }

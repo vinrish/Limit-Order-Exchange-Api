@@ -42,34 +42,23 @@ const logout = async () => {
     >
         <!-- Sidebar -->
         <aside
-            class="w-64 bg-emerald-950 rounded-tr-3xl text-amber-50 p-6 flex flex-col"
+            class="w-64 bg-emerald-950 rounded-tr-3xl text-amber-50 p-6 flex flex-col fixed h-screen"
         >
             <h2 class="text-xl font-bold font-serif mb-6 text-emerald-850/25">
                 {{ title || "Limit Order Exchange Engine" }}
             </h2>
-            <nav class="flex-1">
+            <nav class="flex-1 overflow-auto">
                 <ul>
-                    <!--                    <li class="block h-8 bg-white mb-2 rounded-md hover:bg-emerald-400 hover:text-white">-->
                     <RouterLink
                         class="block h-8 bg-white mb-2 rounded-md hover:bg-emerald-900 hover:text-white text-black pl-2 text-lg"
                         to="/profile"
-                        >Wallet / Profile</RouterLink
+                        >Wallet Overview</RouterLink
                     >
-                    <!--                    </li>-->
-                    <!--                    <li class="block h-8 bg-white mb-2 rounded-md hover:bg-emerald-400 hover:text-white">-->
-                    <RouterLink
-                        to="/orders"
-                        class="block h-8 bg-white mb-2 rounded-md hover:bg-emerald-900 hover:text-white text-black pl-2 text-lg"
-                        >Orders</RouterLink
-                    >
-                    <!--                    </li>-->
-                    <!--                    <li class="block h-8 bg-white mb-2 rounded-md hover:bg-emerald-400 hover:text-white">-->
                     <RouterLink
                         to="/order-form"
                         class="block h-8 bg-white mb-2 rounded-md hover:bg-emerald-900 hover:text-white text-black pl-2 text-lg"
                         >Place Order</RouterLink
                     >
-                    <!--                    </li>-->
                 </ul>
             </nav>
             <button
@@ -81,10 +70,10 @@ const logout = async () => {
         </aside>
 
         <!-- Main Content -->
-        <div class="flex-1 flex flex-col">
+        <div class="flex-1 flex flex-col ml-64 h-screen">
             <!-- Header -->
             <header
-                class="bg-blend-normal text-emerald-400 p-4 flex justify-between items-center shadow"
+                class="bg-blend-normal text-emerald-400 p-4 flex justify-between items-center fixed w-[calc(100%-16rem)] z-10"
             >
                 <span class="font-semibold text-xl ml-8">{{
                     profile?.name || "User"
@@ -95,12 +84,14 @@ const logout = async () => {
             </header>
 
             <!-- Main router content -->
-            <main class="flex-1 p-6 space-y-6">
+            <main class="flex-1 mt-16 mb-16 p-6 overflow-auto">
                 <slot />
             </main>
 
             <!-- Footer -->
-            <footer class="bg-blend-normal text-gray-100 p-4 text-center">
+            <footer
+                class="bg-black/80 text-gray-100 p-4 text-center fixed bottom-0 w-[calc(100%-16rem)]"
+            >
                 &copy; 2025 Limit Order Exchange
             </footer>
         </div>

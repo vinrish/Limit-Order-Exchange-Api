@@ -16,7 +16,9 @@ export interface OrderBookSide {
 }
 
 export const useOrderStore = defineStore("orders", () => {
-    const orders = ref<Order[]>([]);
+    // const orders = ref<Order[]>([]);
+    const openOrders = ref<Order[]>([]);
+    const allOrders = ref<Order[]>([]);
 
     const orderBook = ref<{
         bids: OrderBookSide[];
@@ -26,31 +28,47 @@ export const useOrderStore = defineStore("orders", () => {
         asks: [],
     });
 
-    function setOrders(data: Order[]) {
-        orders.value = data;
-    }
+    // function setOrders(data: Order[]) {
+    //     orders.value = data;
+    // }
 
     function setOrderBook(bids: OrderBookSide[], asks: OrderBookSide[]) {
         orderBook.value.bids = bids;
         orderBook.value.asks = asks;
     }
 
-    function onOrderMatched(payload: any) {
-        const order = orders.value.find((o) => o.id === payload.order_id);
-        if (order) order.status = 2;
+    function setOpenOrders(data: Order[]) {
+        openOrders.value = data;
+    }
+
+    function setAllOrders(data: Order[]) {
+        allOrders.value = data;
+    }
+
+    function onOrderMatched(payload: { order_id: string }) {
+        updateOrderStatus(payload.order_id, 2);
+
+        openOrders.value = openOrders.value.filter(
+            (o) => o.id !== payload.order_id,
+        );
     }
 
     function updateOrderStatus(id: string, status: OrderStatus) {
-        const order = orders.value.find(o => o.id === id);
-        if (order) {
-            order.status = status;
+        const lists = [openOrders.value, allOrders.value];
+
+        for (const list of lists) {
+            const order = list.find((o) => o.id === id);
+            if (order) order.status = status;
         }
     }
 
     return {
-        orders,
+        // orders,
         orderBook,
-        setOrders,
+        openOrders,
+        allOrders,
+        setOpenOrders,
+        setAllOrders,
         setOrderBook,
         onOrderMatched,
         updateOrderStatus,

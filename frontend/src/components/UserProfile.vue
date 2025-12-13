@@ -8,7 +8,7 @@ const balances = computed(() => profileStore.balances);
 </script>
 
 <template>
-    <div class="p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-3 md:grid-cols-3 m-2 p-2 gap-4">
         <!-- User Info Card -->
         <Card class="bg-linear-to-bl from-black via-[#2b2b2f] to-black card">
             <h2 class="text-xl font-bold mb-4 text-emerald-400">User Info</h2>
@@ -40,6 +40,8 @@ const balances = computed(() => profileStore.balances);
                 </li>
             </ul>
         </Card>
+
+        <WalletCard />
     </div>
 </template>
 

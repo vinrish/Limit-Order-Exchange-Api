@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const router = useRouter();
+
 const symbol = ref("BTC");
 const side = ref<"buy" | "sell">("buy");
 const price = ref(0);
@@ -14,6 +16,8 @@ const submit = async () => {
             amount: amount.value,
         },
     });
+
+    router.push("profile");
 };
 </script>
 
@@ -55,8 +59,8 @@ const submit = async () => {
                 />
 
                 <button
-                    @click="submit"
                     class="mt-4 w-full bg-emerald-600 text-black text-2xl py-2 rounded hover:bg-emerald-950 hover:text-white"
+                    @click="submit"
                 >
                     Submit
                 </button>

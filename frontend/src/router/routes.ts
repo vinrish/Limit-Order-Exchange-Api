@@ -2,7 +2,6 @@ import type { RouteRecordRaw } from "vue-router";
 import Login from "@/pages/auth/Login.vue";
 import Register from "@/pages/auth/Register.vue";
 import Profile from "@/pages/profile/Profile.vue";
-import OrdersPage from "@/pages/orders/OrdersPage.vue";
 import OrderForm from "@/pages/orders/OrderForm.vue";
 
 export const routes: RouteRecordRaw[] = [
@@ -24,13 +23,6 @@ export const routes: RouteRecordRaw[] = [
         path: "/profile",
         name: "Profile",
         component: Profile,
-        meta: { auth: true },
-    },
-
-    {
-        path: "/orders",
-        name: "OrdersPage",
-        component: OrdersPage,
         meta: { auth: true },
     },
 
