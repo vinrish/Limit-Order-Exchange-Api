@@ -108,6 +108,23 @@ VITE_API_URL=
 
 ```
 
+## Screenshots
+
+### LoginView
+![LoginView](screenshots/loginview.png)
+
+### RegisterView
+![LoginView](screenshots/registerview.png)
+
+### Wallet Overview
+![Wallet Overview]("projectscreenshots/orders%20wallet%20overview.png")
+
+
+
+### Limit Order Form
+![Limit Order Form](screenshots/limit%20order%20form.png)
+
+
 ## API Endpoints
 Auth
  - **POST /api/v1/register** - Register a new user
