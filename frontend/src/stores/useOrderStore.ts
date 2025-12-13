@@ -15,12 +15,6 @@ export interface OrderBookSide {
     amount: number;
 }
 
-export interface OrdersApiResponse {
-    orders: Order[];
-    bids: OrderBookSide[];
-    asks: OrderBookSide[];
-}
-
 export const useOrderStore = defineStore("orders", () => {
     const orders = ref<Order[]>([]);
 

@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { type OrdersApiResponse, useOrderStore } from "@/stores/useOrderStore";
+import {
+    type Order,
+    type OrderBookSide,
+    type OrdersApiResponse,
+    type OrderStatus,
+    useOrderStore
+} from "@/stores/useOrderStore";
 import { useProfileStore } from "@/stores/useProfileStore";
 
 const orderStore = useOrderStore();
@@ -10,16 +16,32 @@ const symbol = ref("BTC");
 await loadData();
 
 async function loadData() {
-    const { data: ordersResponse } = await useApi<OrdersApiResponse>(
-        createUrl(`orders`, { query: { symbol } }),
-    );
+    const { data: ordersResponse } = await useApi<Order[]>(createUrl(`orders`, { query: { symbol } }));
 
     if (ordersResponse.value) {
-        orderStore.setOrders(ordersResponse.value.orders);
-        orderStore.setOrderBook(
-            ordersResponse.value.bids,
-            ordersResponse.value.asks,
-        );
+        // all orders from API
+        const orders: Order[] = ordersResponse.value.map(o => ({
+            id: o.id,
+            symbol: o.symbol,
+            side: o.side,
+            price: parseFloat(o.price),
+            amount: parseFloat(o.amount),
+            status: o.status as OrderStatus,
+        }));
+
+        orderStore.setOrders(orders);
+
+        const bids: OrderBookSide[] = orders
+            .filter(o => o.side === 'buy')
+            .sort((a, b) => b.price - a.price)
+            .map(o => ({ price: o.price, amount: o.amount }));
+
+        const asks: OrderBookSide[] = orders
+            .filter(o => o.side === 'sell')
+            .sort((a, b) => a.price - b.price)
+            .map(o => ({ price: o.price, amount: o.amount }));
+
+        orderStore.setOrderBook(bids, asks);
     }
 }
 </script>

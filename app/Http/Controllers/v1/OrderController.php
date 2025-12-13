@@ -44,13 +44,16 @@ final class OrderController
         $user = $request->user();
         $symbol = mb_strtoupper((string) $data['symbol']);
         $side = $data['side'];
-        $price = $data['price'];
-        $amount = $data['amount'];
+//        $price = $data['price'];
+//        $amount = $data['amount'];
+
+        $price = number_format((float)$data['price'], 8, '.', '');
+        $amount = number_format((float)$data['amount'], 8, '.', '');
 
         return DB::transaction(function () use ($user, $symbol, $side, $price, $amount) {
             if ($side === 'buy') {
 
-                $cost = bcmul((string) $price, (string) $amount, 8);
+                $cost = bcmul($price, $amount, 8);
 
                 $freshUser = User::lockForUpdate()->find($user->id);
                 if (bccomp((string) $freshUser->balance, $cost, 8) < 0) {
