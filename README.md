@@ -118,7 +118,7 @@ VITE_API_URL=
 ![LoginView](projectscreenshots/registerview.PNG)
 
 ### Wallet Overview
-![Wallet Overview]("projectscreenshots/orders%20wallet%20overview.PNG")
+![Wallet Overview](projectscreenshots/orders%20wallet%20overview.PNG)
 
 
 
