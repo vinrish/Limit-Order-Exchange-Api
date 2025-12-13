@@ -38,7 +38,7 @@ const handleRegister = async () => {
 
 <template>
     <AuthLayout>
-        <Card>
+        <Card class="bg-linear-to-br from-[#2b2b2f] via-[#2b2b2f] to-[#2b2b2f]">
             <!-- Logo -->
             <div class="flex justify-center mb-6">
                 <div class="text-3xl font-bold text-emerald-400">▲</div>

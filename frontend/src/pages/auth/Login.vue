@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuthStore } from "@/stores/useAuthStore.ts";
+import { useToastStore } from "@/stores/useToastStore.ts";
 
 const email = ref("");
 const password = ref("");
@@ -9,6 +10,7 @@ const error = ref("");
 const route = useRoute();
 const router = useRouter();
 const auth = useAuthStore();
+const toast = useToastStore();
 
 const handleLogin = async () => {
     const res = await $api("login", {
@@ -19,13 +21,18 @@ const handleLogin = async () => {
             remember: remember.value,
         },
         onResponseError({ response }) {
-            error.value = response._data.errors;
+            toast.show(
+                response._data.errors.message || "Login failed",
+                "error",
+            );
         },
     });
 
     const { message, access_token, user } = res;
 
     auth.setAuth(access_token, user);
+
+    toast.show(message || "Login successful!", "success");
 
     const redirect = route.query.redirect as string | undefined;
     await router.replace(redirect || { name: "Profile" });
@@ -36,7 +43,7 @@ const handleLogin = async () => {
 
 <template>
     <AuthLayout>
-        <Card>
+        <Card class="bg-linear-to-br from-[#2b2b2f] via-[#2b2b2f] to-[#2b2b2f]">
             <!-- Logo -->
             <div class="flex justify-center mb-6">
                 <div class="text-3xl font-bold text-emerald-400">▲</div>
@@ -121,5 +128,12 @@ const handleLogin = async () => {
                 </RouterLink>
             </p>
         </Card>
+
+        <Toast
+            v-if="showToast"
+            :message="toastMessage"
+            :type="toastType"
+            :duration="3000"
+        />
     </AuthLayout>
 </template>

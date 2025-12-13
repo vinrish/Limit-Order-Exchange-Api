@@ -1,5 +1,8 @@
+<script setup lang="ts"></script>
 <template>
-    <div class="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-[#2b2b2f]">
+    <div
+        class="min-h-screen grid grid-cols-1 lg:grid-cols-2 bg-linear-to-br from-black via-[#2b2b2f] to-black"
+    >
         <!-- LEFT: Illustration -->
         <div
             class="hidden lg:flex items-center justify-center relative overflow-hidden"

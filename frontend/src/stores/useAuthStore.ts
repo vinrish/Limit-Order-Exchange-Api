@@ -14,9 +14,15 @@ export const useAuthStore = defineStore("auth", () => {
         user.value = authUser ?? null;
     }
 
-    function logout() {
-        token.value = null;
-        user.value = null;
+    async function logout() {
+        try {
+            await $api("logout", {
+                method: "POST",
+            });
+        } finally {
+            token.value = null;
+            user.value = null;
+        }
     }
 
     return {

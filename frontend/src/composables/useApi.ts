@@ -12,7 +12,7 @@ export const useApi = createFetch({
     options: {
         refetch: true,
         async beforeFetch({ options }) {
-            const accessToken = useCookie("accessToken").value;
+            const accessToken = useCookie("access_token").value;
 
             if (accessToken) {
                 options.headers = {
