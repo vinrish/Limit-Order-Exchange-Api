@@ -17,6 +17,7 @@ export function initEcho(token: string, reconnectHandler?: ReconnectHandler) {
         key: import.meta.env.VITE_PUSHER_APP_KEY,
         cluster: import.meta.env.VITE_PUSHER_APP_CLUSTER,
         forceTLS: true,
+        encrypted:true,
         enabledTransports: ["ws", "wss"],
         authEndpoint: `${import.meta.env.VITE_API_URL}/broadcasting/auth`,
         auth: {

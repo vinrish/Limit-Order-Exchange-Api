@@ -21,14 +21,14 @@ final class OrderMatched implements ShouldBroadcastNow
      */
     public function __construct(
         private Trade $trade,
-        private int $userId,
+        private string $userId,
         private array $payload,
     ) {}
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return array<int, Channel>
+     * @return array<string, Channel>
      */
     public function broadcastOn(): PrivateChannel
     {
