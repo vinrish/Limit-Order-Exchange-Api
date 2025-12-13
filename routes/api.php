@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\v1\AllOrderController;
 use App\Http\Controllers\v1\CancelOrderController;
 use App\Http\Controllers\v1\LoginController;
 use App\Http\Controllers\v1\LogoutController;
@@ -23,4 +24,5 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::get('orders', [OrderController::class, 'index']);
     Route::post('orders', [OrderController::class, 'store']);
     Route::post('orders/{id}/cancel', [CancelOrderController::class, 'store']);
+    Route::get('all-orders', [AllOrderController::class, 'index']);
 });
