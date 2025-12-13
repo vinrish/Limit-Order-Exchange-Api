@@ -1,6 +1,7 @@
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
 
+// @ts-ignore
 let echo: Echo | null = null;
 
 type ReconnectHandler = () => void;

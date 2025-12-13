@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\v1;
 
+use App\Models\Asset;
 use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,7 @@ final class CancelOrderController
         $user = $request->user();
 
         return DB::transaction(function () use ($user, $id) {
-            $order = Order::where('id', $id)->lockForUpdate()->firstOrFail();
+            $order = Order::query()->where('id', $id)->lockForUpdate()->firstOrFail();
             if ($order->user_id !== $user->id) {
                 return response()->json(['error' => 'forbidden'], 403);
             }
@@ -30,14 +31,20 @@ final class CancelOrderController
                 $freshUser->balance = bcadd((string) $freshUser->balance, $refund, 8);
                 $freshUser->save();
             } else {
-                $asset = Asset::where('user_id', $user->id)->where('symbol', $order->symbol)->lockForUpdate()->first();
+                $asset = Asset::query()->where('user_id', $user->id)->where('symbol', $order->symbol)->lockForUpdate()->first();
                 // move locked_amount back to amount
-                $asset->locked_amount = bcsub((string) $asset->locked_amount, (string) $order->amount, 18);
-                $asset->amount = bcadd((string) $asset->amount, (string) $order->amount, 18);
+                $asset->update([
+                    'locked_amount' => bcsub((string) $asset->locked_amount, (string) $order->amount, 18)
+                    ]);
+                $asset->update([
+                    'amount' => bcadd((string) $asset->amount, (string) $order->amount, 18)
+                    ]);
                 $asset->save();
             }
 
-            $order->status = 3;
+            $order->update([
+                'status' => 3,
+            ]);
             $order->save();
 
             return response()->json(['ok' => true]);

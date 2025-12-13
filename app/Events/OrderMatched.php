@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Events;
 
+use App\Models\Trade;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -18,25 +19,31 @@ final class OrderMatched implements ShouldBroadcastNow
     /**
      * Create a new event instance.
      */
-    public function __construct(public $trade, protected $buyerId, protected $sellerId) {}
+    public function __construct(
+        private Trade $trade,
+        private int $userId,
+        private array $payload,
+    ) {}
 
     /**
      * Get the channels the event should broadcast on.
      *
      * @return array<int, Channel>
      */
-    public function broadcastOn()
+    public function broadcastOn(): Channel
     {
-        return [
-            new PrivateChannel('user.'.$this->buyerId),
-            new PrivateChannel('user.'.$this->sellerId),
-        ];
+        return new PrivateChannel('user.' . $this->userId);
     }
 
     public function broadcastWith(): array
     {
-        return [
-            'trade' => $this->trade->toArray(),
-        ];
+        return array_merge([
+            'type' => 'order.matched',
+            'trade_id' => (string) $this->trade->id,
+            'price' => (string) $this->trade->price,
+            'amount' => (string) $this->trade->amount,
+            'fee_usd' => (string) $this->trade->fee_usd,
+            'timestamp' => now()->toISOString(),
+        ], $this->payload);
     }
 }

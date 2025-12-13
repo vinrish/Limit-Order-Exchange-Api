@@ -115,7 +115,33 @@ final class MatchService
                 'fee_usd' => $fee,
             ]);
 
-            broadcast(new OrderMatched($trade, $buyerUser->id, $sellerUser->id))->toOthers();
+            $baseSymbol = $buy->symbol;
+
+            // BUYER
+            broadcast(new OrderMatched(
+                trade: $trade,
+                userId: $buyerUser->id,
+                payload: [
+                    'base_symbol' => $baseSymbol,
+                    'quote_symbol' => 'USD',
+                    'base_delta' => (string) $amount,
+                    'quote_delta' => '-' . $usd_volume,
+                ],
+            ))->toOthers();
+
+            // SELLER
+            broadcast(new OrderMatched(
+                trade: $trade,
+                userId: $sellerUser->id,
+                payload: [
+                    'base_symbol' => $baseSymbol,
+                    'quote_symbol' => 'USD',
+                    'base_delta' => '-' . $amount,
+                    'quote_delta' => bcsub($usd_volume, $fee, 8),
+                ],
+            ))->toOthers();
+
+//            broadcast(new OrderMatched($trade, $buyerUser->id, $sellerUser->id))->toOthers();
 
             return $trade;
         }, 5);
