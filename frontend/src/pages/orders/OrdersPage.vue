@@ -2,7 +2,6 @@
 import {
     type Order,
     type OrderBookSide,
-    type OrdersApiResponse,
     type OrderStatus,
     useOrderStore
 } from "@/stores/useOrderStore";
@@ -11,12 +10,19 @@ import { useProfileStore } from "@/stores/useProfileStore";
 const orderStore = useOrderStore();
 const profileStore = useProfileStore();
 
-const symbol = ref("BTC");
+const symbol = ref<"BTC" | "ETH">("BTC");
 
-await loadData();
+watch(symbol, async () => {
+    await loadData();
+});
 
 async function loadData() {
-    const { data: ordersResponse } = await useApi<Order[]>(createUrl(`orders`, { query: { symbol } }));
+    orderStore.setOrders([]);
+    orderStore.setOrderBook([], []);
+
+    const { data: ordersResponse } = await useApi<Order[]>(createUrl(`orders`, {
+        query: { symbol }
+    }));
 
     if (ordersResponse.value) {
         // all orders from API
@@ -82,8 +88,23 @@ const cancelOrder = async (orderId: string) => {
 
             <!-- Orderbook -->
             <div class="bg-[#1e1e22] p-4 rounded">
-                <h3 class="font-semibold text-2xl mb-2">OrderBook ({{ symbol }})</h3>
+                <div class="flex flex-row gap gap-20">
+                    <h3 class="font-semibold text-2xl mb-2">OrderBook ({{ symbol }})</h3>
 
+                    <div class="flex gap-2 mb-4">
+                        <button
+                            v-for="s in ['BTC', 'ETH']"
+                            :key="s"
+                            @click="symbol = s"
+                            class="px-4 py-2 rounded font-semibold"
+                            :class="symbol === s
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-700 text-gray-300 hover:bg-gray-600'"
+                        >
+                            {{ s }}
+                        </button>
+                    </div>
+                </div>
                 <div class="grid grid-cols-2 gap-6 text-sm">
                     <div>
                         <p class="text-red-400 text-xl">Asks</p>
