@@ -111,18 +111,18 @@ VITE_API_URL=
 ## Screenshots
 
 ### LoginView
-![LoginView](projectscreenshots/loginview.png)
+![LoginView](projectscreenshots/loginview.PNG)
 
 ### RegisterView
-![LoginView](projectscreenshots/registerview.png)
+![LoginView](projectscreenshots/registerview.PNG)
 
 ### Wallet Overview
-![Wallet Overview]("projectscreenshots/orders%20wallet%20overview.png")
+![Wallet Overview]("projectscreenshots/orders%20wallet%20overview.PNG")
 
 
 
 ### Limit Order Form
-![Limit Order Form](projectscreenshots/limit%20order%20form.png)
+![Limit Order Form](projectscreenshots/limit%20order%20form.PNG)
 
 
 ## API Endpoints
