@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\DB;
 
 final class MatchService
 {
-    private $commissionRate = '0.015'; // 1.5%
+    private string $commissionRate = '0.015'; // 1.5%
 
     public function matchOrder(Order $order)
     {
@@ -59,7 +59,7 @@ final class MatchService
 
             $usd_volume = bcmul((string) $tradePrice, (string) $amount, 8);
 
-            $fee = bcmul($usd_volume, (string) $this->commissionRate, 8);
+            $fee = bcmul($usd_volume, $this->commissionRate, 8);
 
             $buyerUser = User::query()->lockForUpdate()->find($buy->user_id);
             $sellerUser = User::query()->lockForUpdate()->find($sell->user_id);
@@ -125,7 +125,7 @@ final class MatchService
                     'base_symbol' => $baseSymbol,
                     'quote_symbol' => 'USD',
                     'base_delta' => (string) $amount,
-                    'quote_delta' => '-' . $usd_volume,
+                    'quote_delta' => '-'.$usd_volume,
                 ],
             ))->toOthers();
 
@@ -136,12 +136,12 @@ final class MatchService
                 payload: [
                     'base_symbol' => $baseSymbol,
                     'quote_symbol' => 'USD',
-                    'base_delta' => '-' . $amount,
+                    'base_delta' => '-'.$amount,
                     'quote_delta' => bcsub($usd_volume, $fee, 8),
                 ],
             ))->toOthers();
 
-//            broadcast(new OrderMatched($trade, $buyerUser->id, $sellerUser->id))->toOthers();
+            //            broadcast(new OrderMatched($trade, $buyerUser->id, $sellerUser->id))->toOthers();
 
             return $trade;
         }, 5);

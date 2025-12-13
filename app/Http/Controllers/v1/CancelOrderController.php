@@ -34,11 +34,11 @@ final class CancelOrderController
                 $asset = Asset::query()->where('user_id', $user->id)->where('symbol', $order->symbol)->lockForUpdate()->first();
                 // move locked_amount back to amount
                 $asset->update([
-                    'locked_amount' => bcsub((string) $asset->locked_amount, (string) $order->amount, 18)
-                    ]);
+                    'locked_amount' => bcsub((string) $asset->locked_amount, (string) $order->amount, 18),
+                ]);
                 $asset->update([
-                    'amount' => bcadd((string) $asset->amount, (string) $order->amount, 18)
-                    ]);
+                    'amount' => bcadd((string) $asset->amount, (string) $order->amount, 18),
+                ]);
                 $asset->save();
             }
 
